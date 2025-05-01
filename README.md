@@ -1,0 +1,6 @@
+A SIMPLE LINK SHORTENER
+
+### technologies
+
+- FASTAPI
+- MONGODB
