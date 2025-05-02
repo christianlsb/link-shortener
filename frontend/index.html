@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Encurtador de Links</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      .form-container {
+        margin: 2rem 0;
+      }
+      input[type="url"] {
+        width: 80%;
+        padding: 8px;
+        margin-right: 8px;
+      }
+      button {
+        padding: 8px 16px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Encurtador de Links</h1>
+    <div class="form-container">
+      <form id="shortenForm">
+        <input
+          type="url"
+          id="urlInput"
+          placeholder="Cole seu link aqui"
+          required
+        />
+        <button type="button" onclick="sendLink()">Encurtar</button>
+      </form>
+    </div>
+    <div id="content"></div>
+    <script>
+      function sendLink() {
+        const urlInput = document.getElementById("urlInput").value;
+        const contentDiv = document.getElementById("content");
+        fetch("http://127.0.0.1:8000/api/shorter/", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ long_link: urlInput }),
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if (data) {
+              contentDiv.innerHTML = `
+                <h2>Link Encurtado:</h2>
+                <p><a href="${data}" target="_blank">${data}</a></p>
+              `;
+            } else {
+              contentDiv.innerHTML = `<p>Erro: ${data.detail}</p>`;
+            }
+          })
+          .catch((error) => {
+            console.error("Erro ao enviar:", error);
+          });
+      }
+    </script>
+  </body>
+</html>
